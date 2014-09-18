@@ -108,6 +108,10 @@ class DefaultController extends Controller
 
 	public function ffgAction()
 	{
+	    if (false === $this->get('security.context')->isGranted('ROLE_ADMIN')) {
+	        throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+	    }
+	    
 	    // http://www.fantasyflightgames.com/ffg_content/organized-play/2013/private-security-force.png
 	    $em = $this->get('doctrine')->getManager();
 	    
@@ -118,7 +122,7 @@ class DefaultController extends Controller
 	    $fails = array();
 	    
 	    $base = 'http://www.fantasyflightgames.com/ffg_content/android-netrunner';
-	    $root = $this->get('kernel')->getRootDir()."/../web/ffg_images";
+	    $root = $this->get('kernel')->getRootDir()."/../../ffg_images";
 	    
 	    $segments = array(
 	    	'core' => 'core-set-cards',
@@ -157,7 +161,7 @@ class DefaultController extends Controller
 	            /* @var $card Card */
 	            foreach($cards as $card) {
 	                $filepath = $root."/".$card->getCode().".png";
-	                $imgpath = "/web/ffg_images/".$card->getCode().".png";
+	                $imgpath = "/ffg_images/".$card->getCode().".png";
 	                if(file_exists($filepath)) {
 	                    $old[] = $imgpath;
 	                    continue;
