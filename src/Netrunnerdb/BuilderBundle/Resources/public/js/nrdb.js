@@ -5,12 +5,12 @@ function display_notification()
 {
 	if(!localStorage) return;
 	var Notification = {
-		version: '2.0.7',
-		message: "FFG asked me to shut down NetrunnerDB. The future looks grim. Please go to 'My decks' and download all your decks."
+		version: '2.0.5',
+		message: "<strong>New!</strong> Option to compare two or more decks (with selection) + option to duplicate a deck."
 	};
 	var localStorageNotification = localStorage.getItem('notification');
 	if(localStorageNotification === Notification.version) return;
-	var alert = $('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+Notification.message+'</div>');
+	var alert = $('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+Notification.message+'</div>');
 	alert.bind('closed.bs.alert', function () {
 		localStorage.setItem('notification', Notification.version);  
 	})

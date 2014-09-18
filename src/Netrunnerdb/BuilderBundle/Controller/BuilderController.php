@@ -731,45 +731,4 @@ class BuilderController extends Controller
                 ));
     
     }
-    
-    public function downloadallAction()
-    {
-        /* @var $user \Netrunnerdb\UserBundle\Entity\User */
-        $user = $this->getUser();
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->get('doctrine')->getManager();
-        
-        $decks = $this->get('decks')->getByUser($user);
-
-        $file = tempnam("tmp", "zip");
-        $zip = new \ZipArchive();
-        $res = $zip->open($file, \ZipArchive::OVERWRITE);
-        if ($res === TRUE)
-        {
-            foreach($decks as $deck)
-            {
-                $content = array();
-                foreach($deck['cards'] as $slot)
-                {
-                    $card = $em->getRepository('NetrunnerdbCardsBundle:Card')->findOneBy(array('code' => $slot['card_code']));
-                    if(!$card) continue;
-                    $cardtitle = $card->getTitle();
-                    $packname = $card->getPack()->getName();
-                    if($packname == 'Core Set') $packname = 'Core';
-                    $qty = $slot['qty'];
-                    $content[] = "$cardtitle ($packname) x$qty";
-                }
-                $filename = str_replace('/', ' ', $deck['name']).'.txt';
-                $zip->addFromString($filename, implode("\r\n", $content));
-            }
-            $zip->close();
-        }
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/zip');
-        $response->headers->set('Content-Length', filesize($file));
-        $response->headers->set('Content-Disposition', 'attachment; filename="netrunnerdb.zip"');
-        $response->setContent(file_get_contents($file));
-        unlink($file);
-        return $response;
-    }
 }
