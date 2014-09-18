@@ -1260,8 +1260,6 @@ class SocialController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('short_cache'));
         
-        return $this->render('NetrunnerdbBuilderBundle:Default:shutdown.html.twig');
-        
         $decklists_recent = $this->recent(0, 10)['decklists'];
         
         $dbh = $this->get('doctrine')->getConnection();
